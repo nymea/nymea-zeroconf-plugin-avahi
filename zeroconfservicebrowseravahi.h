@@ -38,8 +38,6 @@ class ZeroConfServiceBrowserAvahi : public ZeroConfServiceBrowser
 {
     Q_OBJECT
 
-    friend class HardwareManagerImplementation;
-
 public:
     explicit ZeroConfServiceBrowserAvahi(QObject *parent = nullptr);
     ~ZeroConfServiceBrowserAvahi() override;

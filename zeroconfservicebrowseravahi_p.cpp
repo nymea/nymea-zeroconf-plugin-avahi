@@ -60,7 +60,7 @@ void ZeroConfServiceBrowserAvahiPrivate::callbackServiceTypeBrowser(AvahiService
     case AVAHI_BROWSER_NEW:
         if (!serviceBrowser->m_serviceTypes.contains(type)) {
             serviceBrowser->m_serviceTypes.append(type);
-            qCDebug(dcPlatformZeroConf()) << "[+] Service browser" << type;
+//            qCDebug(dcPlatformZeroConf()) << "[+] Service browser" << type;
             serviceBrowser->createServiceBrowser(type);
         }
         break;

@@ -9,10 +9,10 @@ ZeroConfServicePublisherAvahi::ZeroConfServicePublisherAvahi(QObject *parent) : 
 
 }
 
-bool ZeroConfServicePublisherAvahi::registerService(const QString &id, const QString &name, const QHostAddress &hostAddress, const quint16 &port, const QString &serviceType, const QHash<QString, QString> &txtRecords)
+bool ZeroConfServicePublisherAvahi::registerService(const QString &name, const QHostAddress &hostAddress, const quint16 &port, const QString &serviceType, const QHash<QString, QString> &txtRecords)
 {
-    if (m_services.contains(id)) {
-        qCWarning(dcPlatformZeroConf) << "Cannot register service. Service with id" << id << "already existing";
+    if (m_services.contains(name)) {
+        qCWarning(dcPlatformZeroConf) << "Cannot register service. Service with id" << name << "already existing";
         return false;
     }
     QtAvahiService *service = new QtAvahiService(this);
@@ -20,22 +20,22 @@ bool ZeroConfServicePublisherAvahi::registerService(const QString &id, const QSt
     // Note: reversed order
 
     if (!service->registerService(name, hostAddress, port, serviceType, txtRecords)) {
-        qCWarning(dcPlatformZeroConf) << "Failed to register service" << id << "at avahi";
+        qCWarning(dcPlatformZeroConf) << "Failed to register service" << name << "at avahi";
         delete service;
         return false;
     }
 
-    m_services.insert(id, service);
+    m_services.insert(name, service);
     return true;
 }
 
-void ZeroConfServicePublisherAvahi::unregisterService(const QString &id)
+void ZeroConfServicePublisherAvahi::unregisterService(const QString &name)
 {
-    if (!m_services.contains(id)) {
-        qCWarning(dcPlatformZeroConf) << "Cannot unregister service. Service with id" << id << "not existinng";
+    if (!m_services.contains(name)) {
+        qCWarning(dcPlatformZeroConf) << "Cannot unregister service. Service with id" << name << "not existinng";
         return;
     }
-    QtAvahiService *service = m_services.take(id);
+    QtAvahiService *service = m_services.take(name);
     service->resetService();
     service->deleteLater();
 }

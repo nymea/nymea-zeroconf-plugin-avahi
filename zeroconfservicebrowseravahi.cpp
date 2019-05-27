@@ -20,14 +20,6 @@
  *                                                                         *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/*!
-    \class nymeaserver::ZeroConfServiceBrowserAvahi
-    \brief Allows to browse avahi services in the local network.
-
-    \ingroup hardware
-    \inmodule libnymea
-*/
-
 #include "zeroconfservicebrowseravahi.h"
 #include "zeroconfservicebrowseravahi_p.h"
 #include "loggingcategories.h"
