@@ -39,28 +39,20 @@ class ZeroConfServiceBrowserAvahi : public ZeroConfServiceBrowser
     Q_OBJECT
 
 public:
-    explicit ZeroConfServiceBrowserAvahi(QObject *parent = nullptr);
+    explicit ZeroConfServiceBrowserAvahi(const QString &serviceType = QString(), QObject *parent = nullptr);
     ~ZeroConfServiceBrowserAvahi() override;
 
     QList<ZeroConfServiceEntry> serviceEntries() const override;
 
-    bool available() const override;
-    bool enabled() const override;
-
 private slots:
     void onClientStateChanged(const QtAvahiClient::QtAvahiClientState &state);
 
-protected:
-    void setEnabled(bool enabled) override;
-
 private:
-    bool m_available = false;
-    bool m_enabled = false;
+    QString m_serviceType;
 
     ZeroConfServiceBrowserAvahiPrivate *d_ptr;
 
     QList<ZeroConfServiceEntry> m_serviceEntries;
-    QStringList m_serviceTypes;
 
     void createServiceBrowser(const char* serviceType);
 

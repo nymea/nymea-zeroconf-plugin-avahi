@@ -16,11 +16,12 @@ class PlatformZeroConfPluginControllerAvahi: public PlatformZeroConfController
 public:
     PlatformZeroConfPluginControllerAvahi(QObject *parent = nullptr);
 
-    ZeroConfServiceBrowser *zeroConfServiceBrowser() const override;
-    ZeroConfServicePublisher *zeroConfServicePublisher() const override;
+    bool available() const override;
+
+    ZeroConfServiceBrowser *createServiceBrowser(const QString &serviceType = QString()) override;
+    ZeroConfServicePublisher *servicePublisher() const override;
 
 private:
-    ZeroConfServiceBrowserAvahi *m_serviceBrowser = nullptr;
     ZeroConfServicePublisherAvahi *m_servicePublisher = nullptr;
 };
 

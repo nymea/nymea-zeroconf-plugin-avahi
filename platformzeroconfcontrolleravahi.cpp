@@ -5,16 +5,20 @@
 PlatformZeroConfPluginControllerAvahi::PlatformZeroConfPluginControllerAvahi(QObject *parent):
     PlatformZeroConfController(parent)
 {
-    m_serviceBrowser = new ZeroConfServiceBrowserAvahi(this);
     m_servicePublisher = new ZeroConfServicePublisherAvahi(this);
 }
 
-ZeroConfServiceBrowser *PlatformZeroConfPluginControllerAvahi::zeroConfServiceBrowser() const
+bool PlatformZeroConfPluginControllerAvahi::available() const
 {
-    return m_serviceBrowser;
+    return true;
 }
 
-ZeroConfServicePublisher *PlatformZeroConfPluginControllerAvahi::zeroConfServicePublisher() const
+ZeroConfServiceBrowser *PlatformZeroConfPluginControllerAvahi::createServiceBrowser(const QString &serviceType)
 {
-    return  m_servicePublisher;
+    return new ZeroConfServiceBrowserAvahi(serviceType, this);
+}
+
+ZeroConfServicePublisher *PlatformZeroConfPluginControllerAvahi::servicePublisher() const
+{
+    return m_servicePublisher;
 }

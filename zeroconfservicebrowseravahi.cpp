@@ -27,16 +27,15 @@
 #include <avahi-common/error.h>
 
 /*! Constructs a new \l{ZeroConfServiceBrowserAvahi} with the given \a parent. */
-ZeroConfServiceBrowserAvahi::ZeroConfServiceBrowserAvahi(QObject *parent) :
-    ZeroConfServiceBrowser(parent),
+ZeroConfServiceBrowserAvahi::ZeroConfServiceBrowserAvahi(const QString &serviceType, QObject *parent) :
+    ZeroConfServiceBrowser(serviceType, parent),
+    m_serviceType(serviceType),
     d_ptr(new ZeroConfServiceBrowserAvahiPrivate(new QtAvahiClient))
 {
-    // TODO: check available here
-    m_available = true;
-
     connect(d_ptr->client, &QtAvahiClient::clientStateChanged, this, &ZeroConfServiceBrowserAvahi::onClientStateChanged);
+    qCDebug(dcPlatformZeroConf) << "Created Avahi service broweser" << serviceType;
 
-    qCDebug(dcPlatformZeroConf()) << "-->" << name() << "created successfully.";
+    d_ptr->client->start();
 }
 
 /*! Destructs this \l{ZeroConfServiceBrowserAvahi}. */
@@ -63,42 +62,20 @@ QList<ZeroConfServiceEntry> ZeroConfServiceBrowserAvahi::serviceEntries() const
     return m_serviceEntries;
 }
 
-bool ZeroConfServiceBrowserAvahi::available() const
-{
-    return m_available;
-}
-
-bool ZeroConfServiceBrowserAvahi::enabled() const
-{
-    return m_enabled;
-}
-
 void ZeroConfServiceBrowserAvahi::onClientStateChanged(const QtAvahiClient::QtAvahiClientState &state)
 {
     if (state == QtAvahiClient::QtAvahiClientStateRunning) {
-//        qCDebug(dcPlatformZeroConf()) << "Service browser client connected.";
-        // Return if we already have a service type browser
-        if (d_ptr->serviceTypeBrowser)
-            return;
-
-        d_ptr->serviceTypeBrowser = avahi_service_type_browser_new(d_ptr->client->m_client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, (AvahiLookupFlags) 0, ZeroConfServiceBrowserAvahiPrivate::callbackServiceTypeBrowser, this);
+        qCDebug(dcPlatformZeroConf()) << "Service browser client connected.";
+        if (m_serviceType.isEmpty()) {
+            // Return if we already have a service type browser
+            if (d_ptr->serviceTypeBrowser)
+                return;
+            d_ptr->serviceTypeBrowser = avahi_service_type_browser_new(d_ptr->client->m_client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, (AvahiLookupFlags) 0, ZeroConfServiceBrowserAvahiPrivate::callbackServiceTypeBrowser, this);
+        } else {
+            createServiceBrowser(m_serviceType.toUtf8().data());
+        }
     } else if (state == QtAvahiClient::QtAvahiClientStateFailure) {
-        qCWarning(dcPlatformZeroConf()) << name() << "client failure:" << d_ptr->client->errorString();
-    }
-}
-
-void ZeroConfServiceBrowserAvahi::setEnabled(bool enabled)
-{
-    if (m_enabled == enabled) {
-        qCDebug(dcPlatformZeroConf()) << "Avahi Service Browser already" << (enabled ? "enabled" : "disabled") << "... Not changing state.";
-        return;
-    }
-    if (enabled) {
-        d_ptr->client->start();
-        qCDebug(dcPlatformZeroConf()) << "Avahi Service Browser enabled";
-    } else {
-        d_ptr->client->stop();
-        qCDebug(dcPlatformZeroConf()) << "Avahi Service Browser disabled";
+        qCWarning(dcPlatformZeroConf()) << "client failure:" << d_ptr->client->errorString();
     }
 }
 

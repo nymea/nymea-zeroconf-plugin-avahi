@@ -58,11 +58,8 @@ void ZeroConfServiceBrowserAvahiPrivate::callbackServiceTypeBrowser(AvahiService
 
     switch (event) {
     case AVAHI_BROWSER_NEW:
-        if (!serviceBrowser->m_serviceTypes.contains(type)) {
-            serviceBrowser->m_serviceTypes.append(type);
-//            qCDebug(dcPlatformZeroConf()) << "[+] Service browser" << type;
-            serviceBrowser->createServiceBrowser(type);
-        }
+        qCDebug(dcPlatformZeroConf()) << "[+] Service browser" << type;
+        serviceBrowser->createServiceBrowser(type);
         break;
     case AVAHI_BROWSER_REMOVE:
         // Note: the browser for this serviceType will be deleted once all
@@ -128,7 +125,6 @@ void ZeroConfServiceBrowserAvahiPrivate::callbackServiceBrowser(AvahiServiceBrow
         if (browser)
             avahi_service_browser_free(browser);
 
-        serviceBrowser->m_serviceTypes.removeAll(type);
         break;
     }
     case AVAHI_BROWSER_ALL_FOR_NOW:

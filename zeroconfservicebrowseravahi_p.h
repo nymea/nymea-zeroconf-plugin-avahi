@@ -80,6 +80,7 @@ public:
     AvahiServiceTypeBrowser *serviceTypeBrowser;
     QHash<QString, AvahiServiceBrowser *> serviceBrowserTable;
     QList<AvahiServiceResolver *> m_serviceResolvers;
+    QStringList m_serviceTypes;
 };
 
 #endif // ZEROCONFSERVICEBROWSERAVAHI_P_H
