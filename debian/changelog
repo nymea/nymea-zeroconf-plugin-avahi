@@ -1,5 +1,7 @@
-nymea-zeroconf-plugin-avahi (0.1) UNRELEASED; urgency=medium
+nymea-zeroconf-plugin-avahi (0.1) xenial; urgency=medium
 
+  [ Michael Zanetti ]
   * Initial release.
+  * First implementation of a avahi platform plugin
 
- -- Michael Zanetti <michael.zanetti@nymea.io>  Mon, 08 Apr 2019 13:49:49 +0200
+ -- Jenkins <jenkins@nymea.io>  Wed, 19 Jun 2019 23:53:04 +0200
