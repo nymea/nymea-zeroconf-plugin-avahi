@@ -17,9 +17,10 @@ Package: nymea-zeroconf-plugin-avahi
 Architecture: any
 Section: metapackages
 Multi-Arch: same
-Depends: libnymea1 (>= 0.13),
+Depends: ${shlibs:Depends},
          ${misc:Depends},
          avahi-daemon,
+         libnymea1 (>= 0.13),
 Provides: nymea-zeroconf-plugin-impl
 Description: ZeroConf platform plugin for nymea
  The nymea daemon is a plugin based IoT (Internet of Things) server. The
