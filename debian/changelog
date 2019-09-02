@@ -3,7 +3,7 @@ nymea-zeroconf-plugin-avahi (0.2) xenial; urgency=medium
   [ Michael Zanetti ]
   * Fix missing dependency to libavahi-client
 
- -- Jenkins <jenkins@nymea.io>  Fri, 28 Jun 2019 12:45:58 +0200
+ -- Jenkins <jenkins@nymea.io>  Mon, 02 Sep 2019 18:02:33 +0200
 
 nymea-zeroconf-plugin-avahi (0.1) xenial; urgency=medium
 
