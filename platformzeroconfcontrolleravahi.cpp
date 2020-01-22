@@ -5,7 +5,11 @@
 PlatformZeroConfPluginControllerAvahi::PlatformZeroConfPluginControllerAvahi(QObject *parent):
     PlatformZeroConfController(parent)
 {
-    m_servicePublisher = new ZeroConfServicePublisherAvahi(this);
+    m_avahiClient = new QtAvahiClient(this);
+    m_avahiServiceBrowser = new QtAvahiServiceBrowser(m_avahiClient, this);
+    m_avahiServicePublisher = new QtAvahiServicePublisher(m_avahiClient, this);
+
+    m_servicePublisher = new ZeroConfServicePublisherAvahi(m_avahiServicePublisher, this);
 }
 
 bool PlatformZeroConfPluginControllerAvahi::available() const
@@ -15,7 +19,7 @@ bool PlatformZeroConfPluginControllerAvahi::available() const
 
 ZeroConfServiceBrowser *PlatformZeroConfPluginControllerAvahi::createServiceBrowser(const QString &serviceType)
 {
-    return new ZeroConfServiceBrowserAvahi(serviceType, this);
+    return new ZeroConfServiceBrowserAvahi(m_avahiServiceBrowser, serviceType, this);
 }
 
 ZeroConfServicePublisher *PlatformZeroConfPluginControllerAvahi::servicePublisher() const

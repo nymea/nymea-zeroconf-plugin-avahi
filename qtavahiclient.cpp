@@ -1,132 +1,31 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                                                                         *
- *  Copyright (C) 2016 Simon Stürz <simon.stuerz@guh.io>                   *
- *                                                                         *
- *  This file is part of nymea.                                            *
- *                                                                         *
- *  This library is free software; you can redistribute it and/or          *
- *  modify it under the terms of the GNU Lesser General Public             *
- *  License as published by the Free Software Foundation; either           *
- *  version 2.1 of the License, or (at your option) any later version.     *
- *                                                                         *
- *  This library is distributed in the hope that it will be useful,        *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU      *
- *  Lesser General Public License for more details.                        *
- *                                                                         *
- *  You should have received a copy of the GNU Lesser General Public       *
- *  License along with this library; If not, see                           *
- *  <http://www.gnu.org/licenses/>.                                        *
- *                                                                         *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+#include "qtavahiclient.h"
 
 #include "qt-watch.h"
-#include "qtavahiclient.h"
+
 #include "loggingcategories.h"
 
-#include "zeroconfservicebrowseravahi.h"
-#include "zeroconfservicebrowseravahi_p.h"
-
-#include <avahi-common/error.h>
-
-QtAvahiClient::QtAvahiClient(QObject *parent) :
-    QObject(parent),
-    m_poll(avahi_qt_poll_get()),
-    m_client(nullptr),
-    error(0),
-    m_state(QtAvahiClientStateNone)
+QtAvahiClient::QtAvahiClient(QObject *parent) : QObject(parent)
 {
-    connect(this, &QtAvahiClient::clientStateChangedInternal, this, &QtAvahiClient::onClientStateChanged);
-}
-
-QtAvahiClient::~QtAvahiClient()
-{
-    if (m_client)
-        avahi_client_free(m_client);
+    int error = 0;
+    m_client = avahi_client_new(avahi_qt_poll_get(), (AvahiClientFlags) 0, QtAvahiClient::clientCallback, this, &error);
+    if (error != 0) {
+        qCWarning(dcPlatformZeroConf()) << "Error creating avahi client:" << error;
+    }
 
 }
 
-QtAvahiClient::QtAvahiClientState QtAvahiClient::state() const
+void QtAvahiClient::clientCallback(AvahiClient *client, AvahiClientState state, void *userdata)
 {
-    return m_state;
-}
-
-void QtAvahiClient::start()
-{
-    if (m_client)
-        return;
-
-    m_client = avahi_client_new(m_poll, (AvahiClientFlags) 0, QtAvahiClient::callback, this, &error);
-}
-
-void QtAvahiClient::stop()
-{
-    if (m_client)
-        avahi_client_free(m_client);
-
-    m_client = nullptr;
-}
-
-QString QtAvahiClient::errorString() const
-{
-    return QString(avahi_strerror(error));
-}
-
-void QtAvahiClient::callback(AvahiClient *client, AvahiClientState state, void *userdata)
-{
-    QtAvahiClient *serviceClient = static_cast<QtAvahiClient *>(userdata);
-    if (!serviceClient)
-        return;
-
-    serviceClient->m_client = client;
-
+    Q_UNUSED(client)
+    Q_UNUSED(userdata)
     switch (state) {
     case AVAHI_CLIENT_S_RUNNING:
-        emit serviceClient->clientStateChangedInternal(QtAvahiClientStateRunning);
+        qCDebug(dcPlatformZeroConf()) << "Connected to avahi";
         break;
     case AVAHI_CLIENT_FAILURE:
-        emit serviceClient->clientStateChangedInternal(QtAvahiClientStateFailure);
+        qCWarning(dcPlatformZeroConf()) << "Failed to connect to avahi";
         break;
-    case AVAHI_CLIENT_S_COLLISION:
-        emit serviceClient->clientStateChangedInternal(QtAvahiClientStateCollision);
-        break;
-    case AVAHI_CLIENT_S_REGISTERING:
-        emit serviceClient->clientStateChangedInternal(QtAvahiClientStateRegistering);
-        break;
-    case AVAHI_CLIENT_CONNECTING:
-        emit serviceClient->clientStateChangedInternal(QtAvahiClientStateConnecting);
-        break;
+    default:
+        ;
     }
-}
-
-void QtAvahiClient::onClientStateChanged(const QtAvahiClient::QtAvahiClientState &state)
-{
-    if (m_state == state)
-        return;
-
-    m_state = state;
-
-//    switch (m_state) {
-//    case QtAvahiClientStateNone:
-//        break;
-//    case QtAvahiClientStateRunning:
-//        qCDebug(dcAvahi()) << "Client running.";
-//        break;
-//    case QtAvahiClientStateFailure:
-//        qCWarning(dcAvahi()) << "Client failure:" << errorString();
-//        break;
-//    case QtAvahiClientStateCollision:
-//        qCWarning(dcAvahi()) << "Client collision:" << errorString();
-//        break;
-//    case QtAvahiClientStateRegistering:
-//        qCDebug(dcAvahi()) << "Client registering...";
-//        break;
-//    case QtAvahiClientStateConnecting:
-//        qCDebug(dcAvahi()) << "Client connecting...";
-//        break;
-//    default:
-//        break;
-//    }
-
-    emit clientStateChanged(m_state);
 }

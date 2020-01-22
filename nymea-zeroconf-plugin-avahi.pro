@@ -10,23 +10,20 @@ CONFIG += plugin link_pkgconfig c++11
 PKGCONFIG += nymea avahi-client
 
 SOURCES += platformzeroconfcontrolleravahi.cpp \
-    zeroconfservicebrowseravahi.cpp \
-    zeroconfservicebrowseravahi_p.cpp \
     qtavahiclient.cpp \
+    qtavahiservicebrowser.cpp \
+    qtavahiservicepublisher.cpp \
+    zeroconfservicepublisheravahi.cpp \
+    zeroconfservicebrowseravahi.cpp \
     qt-watch.cpp \
-    qtavahiservice.cpp \
-    qtavahiservice_p.cpp \
-    zeroconfservicepublisheravahi.cpp
-
 
 HEADERS += platformzeroconfcontrolleravahi.h \
-    zeroconfservicebrowseravahi.h \
-    zeroconfservicebrowseravahi_p.h \
     qtavahiclient.h \
+    qtavahiservicebrowser.h \
+    qtavahiservicepublisher.h \
+    zeroconfservicepublisheravahi.h \
+    zeroconfservicebrowseravahi.h \
     qt-watch.h \
-    qtavahiservice.h \
-    qtavahiservice_p.h \
-    zeroconfservicepublisheravahi.h
 
 
 target.path = $$[QT_INSTALL_LIBS]/nymea/platform/
