@@ -21,69 +21,40 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "zeroconfservicebrowseravahi.h"
-#include "zeroconfservicebrowseravahi_p.h"
 #include "loggingcategories.h"
 
-#include <avahi-common/error.h>
-
-/*! Constructs a new \l{ZeroConfServiceBrowserAvahi} with the given \a parent. */
-ZeroConfServiceBrowserAvahi::ZeroConfServiceBrowserAvahi(const QString &serviceType, QObject *parent) :
+ZeroConfServiceBrowserAvahi::ZeroConfServiceBrowserAvahi(QtAvahiServiceBrowser *avahiBrowser, const QString &serviceType, QObject *parent) :
     ZeroConfServiceBrowser(serviceType, parent),
     m_serviceType(serviceType),
-    d_ptr(new ZeroConfServiceBrowserAvahiPrivate(new QtAvahiClient))
+    m_avahiBrowser(avahiBrowser)
 {
-    connect(d_ptr->client, &QtAvahiClient::clientStateChanged, this, &ZeroConfServiceBrowserAvahi::onClientStateChanged);
-    qCDebug(dcPlatformZeroConf) << "Created Avahi service broweser" << serviceType;
-
-    d_ptr->client->start();
+    connect(m_avahiBrowser, &QtAvahiServiceBrowser::serviceAdded, this, [=](const ZeroConfServiceEntry &entry){
+        if (entry.serviceType() == m_serviceType) {
+            emit serviceEntryAdded(entry);
+        }
+    });
+    connect(m_avahiBrowser, &QtAvahiServiceBrowser::serviceRemoved, this, [=](const ZeroConfServiceEntry &entry){
+        if (entry.serviceType() == m_serviceType) {
+            emit serviceEntryRemoved(entry);
+        }
+    });
 }
 
-/*! Destructs this \l{ZeroConfServiceBrowserAvahi}. */
 ZeroConfServiceBrowserAvahi::~ZeroConfServiceBrowserAvahi()
 {
-    // Delete each service browser
-    foreach (const QString &serviceType, d_ptr->serviceBrowserTable.keys()) {
-        AvahiServiceBrowser *browser = d_ptr->serviceBrowserTable.take(serviceType);
-        if (browser) {
-            avahi_service_browser_free(browser);
-        }
-    }
-
-    // Delete the service type browser
-    if (d_ptr->serviceTypeBrowser)
-        avahi_service_type_browser_free(d_ptr->serviceTypeBrowser);
-
-    delete d_ptr;
 }
 
-/*! Returns the current \l{AvahiServiceEntry} list of this \l{ZeroConfServiceBrowserAvahi}. */
 QList<ZeroConfServiceEntry> ZeroConfServiceBrowserAvahi::serviceEntries() const
 {
-    return m_serviceEntries;
-}
-
-void ZeroConfServiceBrowserAvahi::onClientStateChanged(const QtAvahiClient::QtAvahiClientState &state)
-{
-    if (state == QtAvahiClient::QtAvahiClientStateRunning) {
-        qCDebug(dcPlatformZeroConf()) << "Service browser client connected.";
-        if (m_serviceType.isEmpty()) {
-            // Return if we already have a service type browser
-            if (d_ptr->serviceTypeBrowser)
-                return;
-            d_ptr->serviceTypeBrowser = avahi_service_type_browser_new(d_ptr->client->m_client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, (AvahiLookupFlags) 0, ZeroConfServiceBrowserAvahiPrivate::callbackServiceTypeBrowser, this);
-        } else {
-            createServiceBrowser(m_serviceType.toUtf8().data());
-        }
-    } else if (state == QtAvahiClient::QtAvahiClientStateFailure) {
-        qCWarning(dcPlatformZeroConf()) << "client failure:" << d_ptr->client->errorString();
+    if (m_serviceType.isEmpty()) {
+        return m_avahiBrowser->entries();
     }
+    QList<ZeroConfServiceEntry> ret;
+    foreach (const ZeroConfServiceEntry &entry, m_avahiBrowser->entries()) {
+        if (entry.serviceType() == m_serviceType) {
+            ret.append(entry);
+        }
+    }
+    return ret;
 }
-
-void ZeroConfServiceBrowserAvahi::createServiceBrowser(const char *serviceType)
-{
-    // create a new service browser for the given serviceType
-    AvahiServiceBrowser *browser = avahi_service_browser_new(d_ptr->client->m_client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, serviceType, NULL, (AvahiLookupFlags) 0,  ZeroConfServiceBrowserAvahiPrivate::callbackServiceBrowser, this);
-    d_ptr->serviceBrowserTable.insert(serviceType, browser);
-}
-
 

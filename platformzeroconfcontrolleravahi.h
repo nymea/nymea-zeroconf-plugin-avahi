@@ -8,6 +8,10 @@
 class ZeroConfServiceBrowserAvahi;
 class ZeroConfServicePublisherAvahi;
 
+class QtAvahiClient;
+class QtAvahiServiceBrowser;
+class QtAvahiServicePublisher;
+
 class PlatformZeroConfPluginControllerAvahi: public PlatformZeroConfController
 {
     Q_OBJECT
@@ -22,6 +26,10 @@ public:
     ZeroConfServicePublisher *servicePublisher() const override;
 
 private:
+    QtAvahiClient *m_avahiClient = nullptr;
+    QtAvahiServiceBrowser *m_avahiServiceBrowser = nullptr;
+    QtAvahiServicePublisher *m_avahiServicePublisher = nullptr;
+
     ZeroConfServicePublisherAvahi *m_servicePublisher = nullptr;
 };
 

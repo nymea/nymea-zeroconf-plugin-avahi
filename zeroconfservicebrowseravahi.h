@@ -24,13 +24,11 @@
 #define ZEROCONFSERVICEBROWSERAVAHI_H
 
 #include <QObject>
-#include <avahi-client/lookup.h>
 
-#include "qtavahiclient.h"
+#include "qtavahiservicebrowser.h"
 
 #include "network/zeroconf/zeroconfserviceentry.h"
 #include "network/zeroconf/zeroconfservicebrowser.h"
-
 
 class ZeroConfServiceBrowserAvahiPrivate;
 
@@ -39,24 +37,16 @@ class ZeroConfServiceBrowserAvahi : public ZeroConfServiceBrowser
     Q_OBJECT
 
 public:
-    explicit ZeroConfServiceBrowserAvahi(const QString &serviceType = QString(), QObject *parent = nullptr);
+    explicit ZeroConfServiceBrowserAvahi(QtAvahiServiceBrowser *avahiBrowser, const QString &serviceType = QString(), QObject *parent = nullptr);
     ~ZeroConfServiceBrowserAvahi() override;
 
     QList<ZeroConfServiceEntry> serviceEntries() const override;
 
-private slots:
-    void onClientStateChanged(const QtAvahiClient::QtAvahiClientState &state);
-
 private:
     QString m_serviceType;
 
-    ZeroConfServiceBrowserAvahiPrivate *d_ptr;
+    QtAvahiServiceBrowser *m_avahiBrowser = nullptr;
 
-    QList<ZeroConfServiceEntry> m_serviceEntries;
-
-    void createServiceBrowser(const char* serviceType);
-
-    Q_DECLARE_PRIVATE(ZeroConfServiceBrowserAvahi)
 };
 
 #endif // ZEROCONFSERVICEBROWSERAVAHI_H

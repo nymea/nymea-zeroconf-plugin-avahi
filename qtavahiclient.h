@@ -1,74 +1,24 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                                                                         *
- *  Copyright (C) 2016 Simon Stürz <simon.stuerz@guh.io>                   *
- *                                                                         *
- *  This file is part of nymea.                                            *
- *                                                                         *
- *  This library is free software; you can redistribute it and/or          *
- *  modify it under the terms of the GNU Lesser General Public             *
- *  License as published by the Free Software Foundation; either           *
- *  version 2.1 of the License, or (at your option) any later version.     *
- *                                                                         *
- *  This library is distributed in the hope that it will be useful,        *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU      *
- *  Lesser General Public License for more details.                        *
- *                                                                         *
- *  You should have received a copy of the GNU Lesser General Public       *
- *  License along with this library; If not, see                           *
- *  <http://www.gnu.org/licenses/>.                                        *
- *                                                                         *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-#ifndef QTAVAHICLIENT_H
-#define QTAVAHICLIENT_H
+#ifndef AVAHICLIENT_H
+#define AVAHICLIENT_H
 
 #include <QObject>
+
 #include <avahi-client/client.h>
 
 class QtAvahiClient : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(QtAvahiClientState)
-
-public:
-    enum QtAvahiClientState {
-        QtAvahiClientStateNone,
-        QtAvahiClientStateRunning,
-        QtAvahiClientStateFailure,
-        QtAvahiClientStateCollision,
-        QtAvahiClientStateRegistering,
-        QtAvahiClientStateConnecting
-    };
-
+public:    
     explicit QtAvahiClient(QObject *parent = nullptr);
-    ~QtAvahiClient();
-
-    QtAvahiClientState state() const;
 
 private:
-    friend class QtAvahiService;
-    friend class ZeroConfServiceBrowserAvahi;
-    friend class ZeroConfServiceBrowserAvahiPrivate;
+    static void clientCallback(AvahiClient *client, AvahiClientState state, void *userdata);
+    static void serviceBrowserCallback();
 
-    const AvahiPoll *m_poll;
-    AvahiClient *m_client;
-    int error;
-    QtAvahiClientState m_state;
-
-    void start();
-    void stop();
-    QString errorString() const;
-
-    static void callback(AvahiClient *client, AvahiClientState state, void *userdata);
-
-private slots:
-    void onClientStateChanged(const QtAvahiClientState &state);
-
-signals:
-    void clientStateChanged(const QtAvahiClientState &state);
-    void clientStateChangedInternal(const QtAvahiClientState &state);
-
+private:
+    friend class QtAvahiServiceBrowser;
+    friend class QtAvahiServicePublisher;
+    AvahiClient *m_client = nullptr;
 };
 
-#endif // QTAVAHICLIENT_H
+#endif // AVAHICLIENT_H
