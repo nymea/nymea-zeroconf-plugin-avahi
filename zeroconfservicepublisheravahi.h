@@ -5,19 +5,19 @@
 
 #include <network/zeroconf/zeroconfservicepublisher.h>
 
-class QtAvahiService;
+#include "qtavahiservicepublisher.h"
 
 class ZeroConfServicePublisherAvahi : public ZeroConfServicePublisher
 {
     Q_OBJECT
 public:
-    explicit ZeroConfServicePublisherAvahi(QObject *parent = nullptr);
+    explicit ZeroConfServicePublisherAvahi(QtAvahiServicePublisher *publisher, QObject *parent = nullptr);
 
     bool registerService(const QString &name, const QHostAddress &hostAddress, const quint16 &port, const QString &serviceType, const QHash<QString, QString> &txtRecords) override;
     void unregisterService(const QString &name) override;
 
 private:
-    QHash<QString, QtAvahiService*> m_services;
+    QtAvahiServicePublisher *m_publisher = nullptr;
 };
 
 #endif // ZEROCONFSERVICEPUBLISHERAVAHI_H
