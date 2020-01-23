@@ -180,10 +180,12 @@ void QtAvahiServiceBrowser::serviceResolverCallback(AvahiServiceResolver *resolv
                                    flags & AVAHI_LOOKUP_RESULT_LOCAL,
                                    flags & AVAHI_LOOKUP_RESULT_OUR_OWN);
 
-        instance->m_entries.append(entry);
 
-//        qCDebug(dcPlatformZeroConf()) << "Service added:" << entry;
-        emit instance->serviceAdded(entry);
+        if (!instance->m_entries.contains(entry)) {
+            instance->m_entries.append(entry);
+            qCDebug(dcPlatformZeroConf()) << "Service added:" << entry;
+            emit instance->serviceAdded(entry);
+        }
         break;
     }
     }
