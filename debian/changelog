@@ -1,3 +1,15 @@
+nymea-zeroconf-plugin-avahi (0.4) xenial; urgency=medium
+
+  [ Simon Stürz ]
+  * Add license file
+
+  [ Michael Zanetti ]
+  * Fix building in sbuild
+  * Make discoveries more robust against network outages
+  * Update copyright
+
+ -- Jenkins <jenkins@nymea.io>  Thu, 23 Jan 2020 20:09:21 +0100
+
 nymea-zeroconf-plugin-avahi (0.3) xenial; urgency=medium
 
   [ Simon Stürz ]
