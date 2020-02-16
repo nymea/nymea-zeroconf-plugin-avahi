@@ -51,7 +51,7 @@ QtAvahiServicePublisher::QtAvahiServicePublisher(QtAvahiClient *client, QObject 
     // doesn't properly keep multicast sessions alive.
     // https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=736641
     m_reregisterTimer.setInterval(60000);
-    m_reregisterTimer.setSingleShot(true);
+    m_reregisterTimer.setSingleShot(false);
     connect(&m_reregisterTimer, &QTimer::timeout, this, [this](){
         foreach (ServiceInfo *info, m_services) {
             qCDebug(dcPlatformZeroConf()) << "Re-registering avahi service" << info->name;
