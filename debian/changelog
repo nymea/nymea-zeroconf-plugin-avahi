@@ -1,3 +1,10 @@
+nymea-zeroconf-plugin-avahi (0.5) xenial; urgency=medium
+
+  [ Michael Zanetti ]
+  * Fix the workaround for bad routers after refactoring
+
+ -- Jenkins <jenkins@nymea.io>  Sun, 16 Feb 2020 13:31:53 +0100
+
 nymea-zeroconf-plugin-avahi (0.4) xenial; urgency=medium
 
   [ Simon Stürz ]
