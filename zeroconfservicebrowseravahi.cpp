@@ -37,12 +37,12 @@ ZeroConfServiceBrowserAvahi::ZeroConfServiceBrowserAvahi(QtAvahiServiceBrowser *
     m_avahiBrowser(avahiBrowser)
 {
     connect(m_avahiBrowser, &QtAvahiServiceBrowser::serviceAdded, this, [=](const ZeroConfServiceEntry &entry){
-        if (entry.serviceType() == m_serviceType) {
+        if (entry.serviceType() == m_serviceType || m_serviceType.isEmpty()) {
             emit serviceEntryAdded(entry);
         }
     });
     connect(m_avahiBrowser, &QtAvahiServiceBrowser::serviceRemoved, this, [=](const ZeroConfServiceEntry &entry){
-        if (entry.serviceType() == m_serviceType) {
+        if (entry.serviceType() == m_serviceType || m_serviceType.isEmpty()) {
             emit serviceEntryRemoved(entry);
         }
     });
