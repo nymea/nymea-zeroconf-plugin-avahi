@@ -129,6 +129,7 @@ void QtAvahiServiceBrowser::serviceTypeBrowserCallback(AvahiServiceTypeBrowser *
 
     switch (event) {
     case AVAHI_BROWSER_NEW:
+        qCDebug(dcPlatformZeroConf()) << "New service type:" << type;
         instance->registerServiceBrowser(type, domain, interface, protocol);
         break;
     case AVAHI_BROWSER_REMOVE:
@@ -155,6 +156,7 @@ void QtAvahiServiceBrowser::serviceBrowserCallback(AvahiServiceBrowser *browser,
     switch (event) {
     case AVAHI_BROWSER_NEW: {
         // Start resolving new service
+        qCDebug(dcPlatformZeroConf()) << "New Service browser" << type << name;
         instance->registerServiceResolver(name, type, domain, interface, protocol);
         break;
     }
@@ -165,7 +167,7 @@ void QtAvahiServiceBrowser::serviceBrowserCallback(AvahiServiceBrowser *browser,
             // FIXME: In theory we'd need to compare interface too, but nymea's zeroconfentry doesn't store that information
             if (entry.name() == name && entry.serviceType() == type && entry.domain() == domain && entry.protocol() == convertProtocol(protocol)) {
                 i.remove();
-//                qCDebug(dcPlatformZeroConf()) << "Service removed:" << entry;
+                qCDebug(dcPlatformZeroConf()) << "Service removed:" << entry;
                 emit instance->serviceRemoved(entry);
             }
         }
@@ -190,8 +192,12 @@ void QtAvahiServiceBrowser::serviceResolverCallback(AvahiServiceResolver *resolv
 
     switch (event) {
     case AVAHI_RESOLVER_FAILURE:
+        qCDebug(dcPlatformZeroConf()) << "Failed to resolve" << type << name;
+        // Retrying...
+        instance->registerServiceResolver(name, type, domain, interface, protocol);
         break;
     case AVAHI_RESOLVER_FOUND: {
+        qCDebug(dcPlatformZeroConf()) << "Resolved" << type << name;
         char a[AVAHI_ADDRESS_STR_MAX];
         avahi_address_snprint(a, sizeof(a), address);
         QHostAddress hostAddress = QHostAddress(QString(a));

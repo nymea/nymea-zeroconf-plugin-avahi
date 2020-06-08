@@ -51,6 +51,7 @@ public:
     PlatformZeroConfPluginControllerAvahi(QObject *parent = nullptr);
 
     bool available() const override;
+    bool enabled() const override;
 
     ZeroConfServiceBrowser *createServiceBrowser(const QString &serviceType = QString()) override;
     ZeroConfServicePublisher *servicePublisher() const override;
