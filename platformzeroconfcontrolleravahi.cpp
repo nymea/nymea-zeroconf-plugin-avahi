@@ -47,6 +47,11 @@ bool PlatformZeroConfPluginControllerAvahi::available() const
     return true;
 }
 
+bool PlatformZeroConfPluginControllerAvahi::enabled() const
+{
+    return true;
+}
+
 ZeroConfServiceBrowser *PlatformZeroConfPluginControllerAvahi::createServiceBrowser(const QString &serviceType)
 {
     return new ZeroConfServiceBrowserAvahi(m_avahiServiceBrowser, serviceType, this);
