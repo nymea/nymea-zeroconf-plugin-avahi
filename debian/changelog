@@ -1,7 +1,9 @@
-nymea-zeroconf-plugin-avahi (0.7) UNRELEASED; urgency=medium
+nymea-zeroconf-plugin-avahi (0.7) xenial; urgency=medium
 
+  [ Michael Zanetti ]
+  * No change rebuild
 
- -- Michael Zanetti <michael.zanetti@nymea.io>  Tue, 01 Sep 2020 13:00:27 +0200
+ -- Jenkins <jenkins@nymea.io>  Fri, 23 Oct 2020 13:14:31 +0200
 
 nymea-zeroconf-plugin-avahi (0.6) xenial; urgency=medium
 
