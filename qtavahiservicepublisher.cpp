@@ -39,7 +39,7 @@
 #include <avahi-common/alternative.h>
 
 QtAvahiServicePublisher::QtAvahiServicePublisher(QObject *parent):
-    QtAvahiServicePublisher(new QtAvahiClient, parent)
+    QtAvahiServicePublisher(new QtAvahiClient(this), parent)
 {
 }
 
@@ -63,6 +63,9 @@ QtAvahiServicePublisher::QtAvahiServicePublisher(QtAvahiClient *client, QObject 
 
 QtAvahiServicePublisher::~QtAvahiServicePublisher()
 {
+    foreach (const QString &service, m_services.keys()) {
+        unregisterService(service);
+    }
 }
 
 bool QtAvahiServicePublisher::registerService(const QString &name, const QHostAddress &hostAddress, const quint16 &port, const QString &serviceType, const QHash<QString, QString> &txtRecords)
