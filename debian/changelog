@@ -1,3 +1,11 @@
+nymea-zeroconf-plugin-avahi (0.9) xenial; urgency=medium
+
+  [ Michael Zanetti ]
+  * Fix a crash that might happen after a service browser fails to
+    register
+
+ -- Jenkins <jenkins@nymea.io>  Fri, 29 Jan 2021 15:43:13 +0100
+
 nymea-zeroconf-plugin-avahi (0.8) xenial; urgency=medium
 
   [ Michael Zanetti ]
