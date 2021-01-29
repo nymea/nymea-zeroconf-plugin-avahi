@@ -62,7 +62,9 @@ QtAvahiServiceBrowser::~QtAvahiServiceBrowser()
         avahi_service_browser_free(browser);
     }
 
-    avahi_service_type_browser_free(m_serviceTypeBrowser);
+    if (m_serviceTypeBrowser) {
+        avahi_service_type_browser_free(m_serviceTypeBrowser);
+    }
 }
 
 QList<ZeroConfServiceEntry> QtAvahiServiceBrowser::entries()
@@ -80,6 +82,11 @@ void QtAvahiServiceBrowser::registerServiceBrowser(const QString &serviceType, c
                                                              (AvahiLookupFlags) 0,
                                                              QtAvahiServiceBrowser::serviceBrowserCallback,
                                                              this);
+    if (!browser) {
+        qCWarning(dcPlatformZeroConf()) << "Failed to create service browser for" << serviceType << domain << ":" << avahi_strerror(avahi_client_errno(m_client->m_client));
+        return;
+    }
+
     BrowserInfo info;
     info.type = serviceType;
     info.domain = domain;
@@ -133,6 +140,7 @@ void QtAvahiServiceBrowser::serviceTypeBrowserCallback(AvahiServiceTypeBrowser *
         instance->registerServiceBrowser(type, domain, interface, protocol);
         break;
     case AVAHI_BROWSER_REMOVE:
+        qCDebug(dcPlatformZeroConf()) << "Service type removed:" << type;
         instance->unregisterServiceBrowser(type, domain, interface, protocol);
         break;
     case AVAHI_BROWSER_CACHE_EXHAUSTED:
