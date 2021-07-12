@@ -35,6 +35,7 @@
 #include <avahi-common/strlst.h>
 #include <avahi-common/error.h>
 
+#include <QTimer>
 
 QtAvahiServiceBrowser::QtAvahiServiceBrowser(QObject *parent): QObject(parent)
 {
@@ -119,7 +120,7 @@ void QtAvahiServiceBrowser::registerServiceResolver(const QString &name, const Q
                                                                 QtAvahiServiceBrowser::serviceResolverCallback,
                                                                 this);
     if (!resolver) {
-        qCWarning(dcPlatformZeroConf()) << "Failed to resolve service" << QString(name) << ":" << avahi_strerror(avahi_client_errno(m_client->m_client));
+        qCWarning(dcPlatformZeroConf()) << "Failed to resolve service" << type << name << ":" << avahi_strerror(avahi_client_errno(m_client->m_client));
         return;
     }
 
@@ -200,10 +201,17 @@ void QtAvahiServiceBrowser::serviceResolverCallback(AvahiServiceResolver *resolv
 
     switch (event) {
     case AVAHI_RESOLVER_FAILURE:
+    {
         qCDebug(dcPlatformZeroConf()) << "Failed to resolve" << type << name;
-        // Retrying...
-        instance->registerServiceResolver(name, type, domain, interface, protocol);
+        // Retrying in 5 seconds... (Copying char* and capturing the copy in the lambda)
+        QString nameCopy(name);
+        QString typeCopy(type);
+        QString domainCopy(domain);
+        QTimer::singleShot(5000, instance, [=]{
+            instance->registerServiceResolver(nameCopy, typeCopy, domainCopy, interface, protocol);
+        });
         break;
+    }
     case AVAHI_RESOLVER_FOUND: {
         qCDebug(dcPlatformZeroConf()) << "Resolved" << type << name;
         char a[AVAHI_ADDRESS_STR_MAX];
