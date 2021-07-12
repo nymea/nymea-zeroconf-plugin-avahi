@@ -1,3 +1,10 @@
+nymea-zeroconf-plugin-avahi (0.11) xenial; urgency=medium
+
+  [ Michael Zanetti ]
+  * Delay retrying of resolving for 5 seconds to avoid spinning the CPU
+
+ -- Jenkins <jenkins@nymea.io>  Mon, 12 Jul 2021 12:41:08 +0200
+
 nymea-zeroconf-plugin-avahi (0.10) xenial; urgency=medium
 
   [ Michael Zanetti ]
