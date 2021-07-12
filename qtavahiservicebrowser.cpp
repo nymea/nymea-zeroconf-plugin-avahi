@@ -35,6 +35,7 @@
 #include <avahi-common/strlst.h>
 #include <avahi-common/error.h>
 
+#include <QTimer>
 
 QtAvahiServiceBrowser::QtAvahiServiceBrowser(QObject *parent): QObject(parent)
 {
@@ -201,8 +202,10 @@ void QtAvahiServiceBrowser::serviceResolverCallback(AvahiServiceResolver *resolv
     switch (event) {
     case AVAHI_RESOLVER_FAILURE:
         qCDebug(dcPlatformZeroConf()) << "Failed to resolve" << type << name;
-        // Retrying...
-        instance->registerServiceResolver(name, type, domain, interface, protocol);
+        // Retrying in 5 seconds...
+        QTimer::singleShot(5000, instance, [=]{
+            instance->registerServiceResolver(name, type, domain, interface, protocol);
+        });
         break;
     case AVAHI_RESOLVER_FOUND: {
         qCDebug(dcPlatformZeroConf()) << "Resolved" << type << name;
