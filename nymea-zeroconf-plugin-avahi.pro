@@ -4,7 +4,7 @@ TARGET = $$qtLibraryTarget(nymea_zeroconfpluginavahi)
 QT -= gui
 QT += network
 
-#QMAKE_CXXFLAGS *= -Werror
+QMAKE_CXXFLAGS *= -Wno-deprecated-declaration
 
 CONFIG += plugin link_pkgconfig c++11
 PKGCONFIG += nymea avahi-client
