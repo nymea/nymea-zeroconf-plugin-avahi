@@ -1,3 +1,14 @@
+nymea-zeroconf-plugin-avahi (0.11) xenial; urgency=medium
+
+  [ Michael Zanetti ]
+  * Delay retrying of resolving for 5 seconds to avoid spinning the CPU
+
+  [ Simon Stürz ]
+  * Remove dbus linking in project file
+  * Make build with gcc-9
+
+ -- Jenkins <jenkins@nymea.io>  Mon, 06 Sep 2021 09:06:20 +0200
+
 nymea-zeroconf-plugin-avahi (0.10) xenial; urgency=medium
 
   [ Michael Zanetti ]
