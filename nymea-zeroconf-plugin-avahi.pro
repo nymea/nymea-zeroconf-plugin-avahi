@@ -2,7 +2,7 @@ TEMPLATE = lib
 TARGET = $$qtLibraryTarget(nymea_zeroconfpluginavahi)
 
 QT -= gui
-QT += network dbus
+QT += network
 
 #QMAKE_CXXFLAGS *= -Werror
 
