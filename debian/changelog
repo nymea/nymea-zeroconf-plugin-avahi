@@ -1,3 +1,10 @@
+nymea-zeroconf-plugin-avahi (0.13) xenial; urgency=medium
+
+  [ Simon Stürz ]
+  * Make build with gcc-9
+
+ -- Jenkins <jenkins@nymea.io>  Tue, 02 Nov 2021 17:18:38 +0100
+
 nymea-zeroconf-plugin-avahi (0.12) xenial; urgency=medium
 
   [ Simon Stürz ]
