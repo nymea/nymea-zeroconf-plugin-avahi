@@ -52,7 +52,11 @@ QtAvahiServiceBrowser::QtAvahiServiceBrowser(QtAvahiClient *client, QObject *par
 
 QtAvahiServiceBrowser::~QtAvahiServiceBrowser()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    foreach (AvahiServiceResolver *resolver, m_resolvers) {
+#else
     foreach (AvahiServiceResolver *resolver, m_resolvers.toList()) {
+#endif
         avahi_service_resolver_free(resolver);
     }
     m_resolvers.clear();
