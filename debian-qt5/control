@@ -1,14 +1,14 @@
 Source: nymea-zeroconf-plugin-avahi
 Section: utils
 Priority: optional
-Maintainer: nymea GmbH <developer@nymea.io>
+Maintainer: chargebyte austria GmbH <contact@nymea.io>
 Standards-Version: 4.6.0
 Homepage: https://nymea.io
-Build-Depends: debhelper (>= 9.0.0),
-               dpkg-dev (>= 1.16.1~),
+Build-Depends: debhelper,
+               dpkg-dev,
                qt5-qmake,
                qtbase5-dev,
-               libnymea-dev (>= 0.27.0),
+               libnymea-dev,
                libavahi-common-dev,
                libavahi-client-dev,
 
@@ -19,7 +19,7 @@ Multi-Arch: same
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          avahi-daemon,
-         libnymea1 (>= 0.13),
+         libnymea1,
 Provides: nymea-zeroconf-plugin-impl
 Description: ZeroConf platform plugin for nymea
  The nymea daemon is a plugin based IoT (Internet of Things) server. The
@@ -29,4 +29,3 @@ Description: ZeroConf platform plugin for nymea
  in the system and create individual scenes and behaviors for your environment.
  .
  This package will install the platform adaption for avahi based platforms.
-
