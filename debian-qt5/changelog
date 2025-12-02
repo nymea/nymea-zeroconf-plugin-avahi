@@ -1,3 +1,10 @@
+nymea-zeroconf-plugin-avahi (1.13.0) jammy; urgency=medium
+
+  [ Simon Stürz ]
+  * Update license text and add SPDX identifier
+
+ -- jenkins <developer@nymea.io>  Tue, 02 Dec 2025 10:39:43 +0100
+
 nymea-zeroconf-plugin-avahi (1.12.4) jammy; urgency=medium
 
 
