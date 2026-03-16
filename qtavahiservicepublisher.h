@@ -24,6 +24,7 @@
 #ifndef QAVAHISERVICEPUBLISHER_H
 #define QAVAHISERVICEPUBLISHER_H
 
+#include <QHash>
 #include <QObject>
 #include <QHostAddress>
 #include <QTimer>

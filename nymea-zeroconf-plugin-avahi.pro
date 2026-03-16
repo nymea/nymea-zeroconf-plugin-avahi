@@ -17,7 +17,7 @@ greaterThan(QT_MAJOR_VERSION, 5) {
     DEFINES += QT_DISABLE_DEPRECATED_UP_TO=0x050F00
 }
 
-QMAKE_CXXFLAGS *= -Wno-deprecated-declaration
+QMAKE_CXXFLAGS *= -Wno-deprecated-declarations
 
 CONFIG += plugin link_pkgconfig
 PKGCONFIG += nymea avahi-client
