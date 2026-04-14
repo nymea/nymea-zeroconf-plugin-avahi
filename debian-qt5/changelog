@@ -1,3 +1,10 @@
+nymea-zeroconf-plugin-avahi (1.15.0) noble; urgency=medium
+
+  [ Simon Stürz ]
+  * Fix Qt 6 Clang build issues
+
+ -- jenkins <developer@nymea.io>  Tue, 14 Apr 2026 14:25:14 +0200
+
 nymea-zeroconf-plugin-avahi (1.14.2) noble; urgency=medium
 
 
